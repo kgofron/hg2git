@@ -9,7 +9,7 @@ Copyright (c): 2020 Brookhaven National Laboratory
 
 Release version of this converter of EPICS iocs to git are available on github. Please report any problems of feature requests on the issues page of the https://github.com/kgofron/hg2git.
 
-This mercurial to git converter was tested only for inPlace (within repo) conversion of EPICS iocs, and supports following options.
+This mercurial to git converter was tested only for inPlace (within hg repo) conversion of EPICS iocs, and supports following options.
 * -r . {local inPlace hg repository to be migrated into git/gitlab}
 * -D7  {Debian 7 repository; no option when using Debian 10}
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
