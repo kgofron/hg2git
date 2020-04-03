@@ -170,6 +170,7 @@ else # Hg->git migration InPlace (inside hg repository))
         echo "pmac as files"
         ;;
       cAS|cameraAS|cameraAutoSave)
+        git add -f autosave/auto_settings.sav
         echo "camera autosave files"
         ;;
     esac
