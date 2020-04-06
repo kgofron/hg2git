@@ -26,6 +26,12 @@ kgofron@xf10idd-ioc1:/epics/iocs/mc3$ hg2git.sh -r . -D7 -as pAS -url https://gi
 kaz@debian10:~/ioc1/mc3$ hg2git.sh -r . -url https://github.com/kgofron/  --force
 ```
 
+### Structure same as hg
+* gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1
+  * mc1
+  * mc2
+  * cam-onAis
+  
 ### Installation
 
 **Note - The hg2git has only been tested on Debian 7 and Debian 10**
