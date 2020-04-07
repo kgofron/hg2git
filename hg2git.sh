@@ -71,7 +71,7 @@ do
       ;;
     -D7|--Deb7|--Debian7)
       # Debian 7 requires v160914, or maybe v180610
-      shift
+    #  shift
 #      C_OPTS="-b v160914"
       C_OPTS="-b v180317"
       ;;
