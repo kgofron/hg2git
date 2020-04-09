@@ -72,8 +72,8 @@ do
     -D7|--Deb7|--Debian7)
       # Debian 7 requires v160914, or maybe v180610
     #  shift
-      C_OPTS="-b v160914"
-#      C_OPTS="-b v180317"
+#      C_OPTS="-b v160914"
+      C_OPTS="-b v180317"
       ;;
     -as|--autoS|--autoSave) # PMAC AutoSave as/req, as/save
       shift
