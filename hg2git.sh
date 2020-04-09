@@ -23,7 +23,7 @@ REPO_S=$(basename "$PWD")
 echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
 GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
-GIT_REPO="$GIT_URL$REPO_S"
+GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo=$GIT_REPO"
 
 USAGE="[--quiet] [-r <repo>] [--force] [-D <max>] [-A <file>] [-M <name>]"
