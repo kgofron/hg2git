@@ -162,17 +162,17 @@ else # Hg->git migration InPlace (inside hg repository))
     fi
     # .gitignore created
 
-    if [ "$IOC_USER" = "" ]
+    if [ "$IOC_OWNER" = "" ]
     then
 	git init
 	/tmp/fast-export/hg-fast-export.sh -r . --force
 	git reset --hard HEAD   # the files shows as deleted in 'git status'
 	git add .gitignore	
     else
-	sudo -Eu $IOC_USER bash -c "git init"
-	sudo -Eu $IOC_USER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
-	sudo -Eu $IOC_USER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
-	sudo -Eu $IOC_USER bash -c "git add .gitignore"	
+	sudo -Eu $IOC_OWNER bash -c "git init"
+	sudo -Eu $IOC_OWNER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
+	sudo -Eu $IOC_OWNER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
+	sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
     fi
     
     #/tmp/fast-export/hg-fast-export.sh -r . --force
@@ -184,33 +184,32 @@ else # Hg->git migration InPlace (inside hg repository))
     
     case $AS_OPTS in   # autosave
 	pAS|pmacAS|pmacAutoSave)          # pmac autosave
-	    if [ "$IOC_USER" = "" ]
+	    if [ "$IOC_OWNER" = "" ]
 	    then	    
 		git add -f as/req/info_positions.req as/req/info_settings.req
 		git add -f as/save/info_positions.sav as/save/info_settings.sav
 	    else
-		sudo -Eu $IOC_USER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
-		sudo -Eu $IOC_USER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
 	    fi		    
 	    echo "pmac as files"
         ;;
 	cAS|cameraAS|cameraAutoSave)
-	   if [ "$IOC_USER" = "" ]
+	   if [ "$IOC_OWNER" = "" ]
 	    then 
 		git add -f autosave/auto_settings.sav
 	   else
-		sudo -Eu $IOC_USER bash -c "git add -f autosave/auto_settings.sav"	       
+		sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
 	   fi	   
            echo "camera autosave files"
         ;;
     esac
 
-    if [ "$IOC_USER" = "" ]
+    if [ "$IOC_OWNER" = "" ]
     then
         git commit -m ".gitignore tracked"
-	#    git remote add origin https://github.com/kgofron/ez4axis1
-	git remote add origin $GIT_REPO
-	git push -u origin master $GFI_OPTS
+        git remote add origin $GIT_REPO
+        git push -u origin master $GFI_OPTS
     else
         git commit -m ".gitignore tracked"
 	git remote add origin $GIT_REPO
