@@ -8,6 +8,7 @@
 # with gitlab repo existing (overwrite)
 # hg2git.sh -r . -as pAS --force
 # hg2git.sh -r . -as pAS -url "https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/" --force
+# hg2git.sh -r . -D7 -u softioc -as pAS -url "https://github.com/kgofron/mc3/" --force
 
 FST_EXPRT="/tmp/fast-export"  # fast-export clone directory
 REPO=""
@@ -75,6 +76,11 @@ do
 #      C_OPTS="-b v160914"
       C_OPTS="-b v180317"
       ;;
+    -u|--usr|--user)
+	# Owner of the ioc directory
+	shift
+	IOC_OWNER="$1"
+	;;
     -as|--autoS|--autoSave) # PMAC AutoSave as/req, as/save
       shift
       AS_OPTS="$1"
@@ -156,26 +162,63 @@ else # Hg->git migration InPlace (inside hg repository))
     fi
     # .gitignore created
 
-    git init
-    /tmp/fast-export/hg-fast-export.sh -r . --force
+    if [ "$IOC_USER" = "" ]
+    then
+	git init
+	/tmp/fast-export/hg-fast-export.sh -r . --force
+	git reset --hard HEAD   # the files shows as deleted in 'git status'
+	git add .gitignore	
+    else
+	sudo -Eu $IOC_USER bash -c "git init"
+	sudo -Eu $IOC_USER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
+	sudo -Eu $IOC_USER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
+	sudo -Eu $IOC_USER bash -c "git add .gitignore"	
+    fi
+    
+    #/tmp/fast-export/hg-fast-export.sh -r . --force
     #/tmp/fast-export/hg-fast-export.sh -r . -A /tmp/authors --force
     # git clean         # did not work 
     # git checkout HEAD # does not work for InPlace conversion
-    git reset --hard HEAD   # the files shows as deleted in 'git status'
-    git add .gitignore
+    #git reset --hard HEAD   # the files shows as deleted in 'git status'
+    #git add .gitignore
+    
     case $AS_OPTS in   # autosave
-      pAS|pmacAS|pmacAutoSave)          # pmac autosave
-        git add -f as/req/info_positions.req as/req/info_settings.req
-        git add -f as/save/info_positions.sav as/save/info_settings.sav
-        echo "pmac as files"
+	pAS|pmacAS|pmacAutoSave)          # pmac autosave
+	    if [ "$IOC_USER" = "" ]
+	    then	    
+		git add -f as/req/info_positions.req as/req/info_settings.req
+		git add -f as/save/info_positions.sav as/save/info_settings.sav
+	    else
+		sudo -Eu $IOC_USER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
+		sudo -Eu $IOC_USER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
+	    fi		    
+	    echo "pmac as files"
         ;;
-      cAS|cameraAS|cameraAutoSave)
-        git add -f autosave/auto_settings.sav
-        echo "camera autosave files"
+	cAS|cameraAS|cameraAutoSave)
+	   if [ "$IOC_USER" = "" ]
+	    then 
+		git add -f autosave/auto_settings.sav
+	   else
+		sudo -Eu $IOC_USER bash -c "git add -f autosave/auto_settings.sav"	       
+	   fi	   
+           echo "camera autosave files"
         ;;
     esac
-    git commit -m ".gitignore tracked"
-#    git remote add origin https://github.com/kgofron/ez4axis1
-    git remote add origin $GIT_REPO
-    git push -u origin master $GFI_OPTS
+
+    if [ "$IOC_USER" = "" ]
+    then
+        git commit -m ".gitignore tracked"
+	#    git remote add origin https://github.com/kgofron/ez4axis1
+	git remote add origin $GIT_REPO
+	git push -u origin master $GFI_OPTS
+    else
+        git commit -m ".gitignore tracked"
+	git remote add origin $GIT_REPO
+	git push -u origin master $GFI_OPTS
+	
+    fi
+    
+#    git commit -m ".gitignore tracked"
+#    git remote add origin $GIT_REPO  # https://github.com/kgofron/ez4axis
+#    git push -u origin master $GFI_OPTS
 fi  # .hg exists, .git does not exist; Conversion hg-> git is automatic
