@@ -217,10 +217,9 @@ else # Hg->git migration InPlace (inside hg repository))
         git remote add origin $GIT_REPO
         git push -u origin master $GFI_OPTS
     else
-        git commit -m ".gitignore tracked"
-	git remote add origin $GIT_REPO
-	git push -u origin master $GFI_OPTS
-	
+        sudo -Eu $IOC_OWNER bash -c "git commit -m '.gitignore tracked'"
+        sudo -Eu $IOC_OWNER bash -c "git remote add origin $GIT_REPO"
+        sudo -Eu $IOC_OWNER bash -c "git push -u origin master $GFI_OPTS"
     fi
     
 #    git commit -m ".gitignore tracked"
