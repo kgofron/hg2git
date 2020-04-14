@@ -8,7 +8,7 @@
 # with gitlab repo existing (overwrite)
 # hg2git.sh -r . -as pAS --force
 # hg2git.sh -r . -as pAS -url "https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/" --force
-# hg2git.sh -r . -D7 -u softioc -as pAS -url "https://github.com/kgofron/mc3/" --force
+# $ hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force
 
 FST_EXPRT="/tmp/fast-export"  # fast-export clone directory
 REPO=""
