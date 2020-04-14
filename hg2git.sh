@@ -144,6 +144,8 @@ else # Hg->git migration InPlace (inside hg repository))
     if [ -f ".gitignore" ]; then
         echo ".gitignore exists"
     else
+	if [ "$IOC_OWNER" = "" ]
+	then
         cp .hgignore .gitignore
         echo ".hg" >> .gitignore
         # echo "*~" >> .gitignore
@@ -159,20 +161,24 @@ else # Hg->git migration InPlace (inside hg repository))
         # echo "TMP/" >> .gitignore
         # echo ".git/" >> .gitignore
         # echo ".hg/" >> .gitignore
-    fi
-    # .gitignore created
+	else
+	    sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
+            sudo -Eu $IOC_OWNER bash -c "echo ".hg" >> .gitignore"
+	fi
+	
+fi    # .gitignore created
 
     if [ "$IOC_OWNER" = "" ]
     then
-	git init
-	/tmp/fast-export/hg-fast-export.sh -r . --force
-	git reset --hard HEAD   # the files shows as deleted in 'git status'
-	git add .gitignore	
+      git init
+	    /tmp/fast-export/hg-fast-export.sh -r . --force
+	    git reset --hard HEAD   # the files shows as deleted in 'git status'
+	    git add .gitignore	
     else
-	sudo -Eu $IOC_OWNER bash -c "git init"
-	sudo -Eu $IOC_OWNER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
-	sudo -Eu $IOC_OWNER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
-	sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
+	    sudo -Eu $IOC_OWNER bash -c "git init"
+	    sudo -Eu $IOC_OWNER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
+	    sudo -Eu $IOC_OWNER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
+	    sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
     fi
     
     #/tmp/fast-export/hg-fast-export.sh -r . --force
