@@ -27,7 +27,7 @@ GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
 GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo=$GIT_REPO"
 
-USAGE="[--quiet] [-r <repo>] [--force] [-D <max>] [-A <file>] [-M <name>]"
+USAGE="[--quiet] [-r <repo>] [--force] [-D7] [-as <pAS>] [-u <user>] [-A <file>] [-M <name>]"
 LONG_USAGE="Import hg repository <repo> up to either tip or <max>
 If <repo> is omitted, use last hg repository as obtained from state file,
 GIT_DIR/$PFX-$SFX_STATE by default.
@@ -35,11 +35,12 @@ GIT_DIR/$PFX-$SFX_STATE by default.
 
 Note: The argument order matters.
 Options:
-	--quiet   Quiet option passed to git push
+	--quiet   Quiet option passed to git push 
 	-r <repo> Mercurial repository to import (InPlace='.')
 	--force   Force push to git repository if it exists.
 	-D7       Debian 7 version to import
 	-as       Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
+	-u        IOC Owner account
 	-url      URL of the git repo to push to
 	-A <file> Read author map from file
 	          (Same as in git-svnimport(1) and git-cvsimport(1))
@@ -72,15 +73,15 @@ do
       ;;
     -D7|--Deb7|--Debian7)
       # Debian 7 requires v160914, or maybe v180610
-    #  shift
 #      C_OPTS="-b v160914"
       C_OPTS="-b v180317"
+#      C_OPTS="-b v200213"
       ;;
     -u|--usr|--user)
-	# Owner of the ioc directory
-	shift
-	IOC_OWNER="$1"
-	;;
+      # Owner of the ioc directory
+      shift
+      IOC_OWNER="$1"
+      ;;
     -as|--autoS|--autoSave) # PMAC AutoSave as/req, as/save
       shift
       AS_OPTS="$1"
@@ -144,8 +145,8 @@ else # Hg->git migration InPlace (inside hg repository))
     if [ -f ".gitignore" ]; then
         echo ".gitignore exists"
     else
-	if [ "$IOC_OWNER" = "" ]
-	then
+      if [ "$IOC_OWNER" = "" ]
+      then
         cp .hgignore .gitignore
         echo ".hg" >> .gitignore
         # echo "*~" >> .gitignore
@@ -161,12 +162,11 @@ else # Hg->git migration InPlace (inside hg repository))
         # echo "TMP/" >> .gitignore
         # echo ".git/" >> .gitignore
         # echo ".hg/" >> .gitignore
-	else
-	    sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
-            sudo -Eu $IOC_OWNER bash -c "echo ".hg" >> .gitignore"
-	fi
-	
-fi    # .gitignore created
+      else
+        sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo ".hg" >> .gitignore"
+      fi	
+    fi    # .gitignore created
 
     if [ "$IOC_OWNER" = "" ]
     then
@@ -192,23 +192,23 @@ fi    # .gitignore created
 	pAS|pmacAS|pmacAutoSave)          # pmac autosave
 	    if [ "$IOC_OWNER" = "" ]
 	    then	    
-		git add -f as/req/info_positions.req as/req/info_settings.req
-		git add -f as/save/info_positions.sav as/save/info_settings.sav
+        git add -f as/req/info_positions.req as/req/info_settings.req
+        git add -f as/save/info_positions.sav as/save/info_settings.sav
 	    else
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
+        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
+        sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
 	    fi		    
 	    echo "pmac as files"
         ;;
 	cAS|cameraAS|cameraAutoSave)
-	   if [ "$IOC_OWNER" = "" ]
+      if [ "$IOC_OWNER" = "" ]
 	    then 
-		git add -f autosave/auto_settings.sav
-	   else
-		sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
-	   fi	   
-           echo "camera autosave files"
-        ;;
+        git add -f autosave/auto_settings.sav
+      else
+        sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
+      fi	   
+      echo "camera autosave files"
+      ;;
     esac
 
     if [ "$IOC_OWNER" = "" ]
