@@ -13,7 +13,8 @@ This mercurial to git converter was tested only for inPlace (within hg repo) con
 * -r . {local inPlace hg repository to be migrated into git/gitlab}
 * -D7  {Debian 7 repository; no option when using Debian 10}
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
-* -as aAS {areaDetector iocs autosave files}
+* -as cAS {areaDetector iocs autosave files}
+* -u <owner> {convert repo owned by another user: softioc}
 * -url https://github.com/kgofron/mc3 {git destination repository}
 * --force {force option for pushing to the destination git repository}
 
