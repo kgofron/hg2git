@@ -18,9 +18,9 @@ This mercurial to git converter was tested only for inPlace (within hg repo) con
 * -url https://github.com/kgofron/mc3 {git destination repository}
 * --force {force option for pushing to the destination git repository}
 
-* Debian 7 turboPmac ioc conversion example with autosave files
+* Debian 7 turboPmac ioc conversion example with autosave files owned by softioc user
 ```
-kgofron@xf10idd-ioc1:/epics/iocs/mc3$ hg2git.sh -r . -D7 -as pAS -url https://github.com/kgofron/ --force`
+kgofron@xf10idd-ioc1:/epics/iocs/mc3$ hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force`
 ```
 * Debian 10 turboPmac ioc conversion example without autosave files
 ```
