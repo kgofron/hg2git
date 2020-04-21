@@ -42,7 +42,7 @@ Options:
 	--force   Force push to git repository if it exists.
 	-D7       Debian 7 version to import
 	-as       Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
-	-u        IOC Owner account
+	-u        IOC Owner account (e.g. softioc)
 	-url      URL of the git repo to push to
 	-A <file> Read author map from file
 	          (Same as in git-svnimport(1) and git-cvsimport(1))
