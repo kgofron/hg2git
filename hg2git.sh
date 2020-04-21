@@ -224,12 +224,14 @@ else # Hg->git migration InPlace (inside hg repository))
         git commit -m ".gitignore tracked"
         git remote add origin $GIT_REPO
         # git push -u origin master $GFI_OPTS # push only master branch
-        git push -u origin $GFI_OPTS  # push all branches
+        # git push --set-upstream origin $BRANCH $GFI_OPTS # push feature branch
+        git push -u origin --all $GFI_OPTS  # push all branches
     else
         sudo -Eu $IOC_OWNER bash -c "git commit -m '.gitignore tracked'"
         sudo -Eu $IOC_OWNER bash -c "git remote add origin $GIT_REPO"
 #        sudo -Eu $IOC_OWNER bash -c "git push -u origin master $GFI_OPTS"  # push only master branch
-        sudo -Eu $IOC_OWNER bash -c "git push -u origin $GFI_OPTS"  # all branches
+#        sudo -Eu $IOC_OWNER bash -c "git push --set-upstream origin $BRANCH $GFI_OPTS"  # push feature branch
+        sudo -Eu $IOC_OWNER bash -c "git push -u origin --all $GFI_OPTS"  # all branches
     fi
     
 #    git commit -m ".gitignore tracked"
