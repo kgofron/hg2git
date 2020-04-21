@@ -8,18 +8,18 @@
 # with gitlab repo existing (overwrite)
 # hg2git.sh -r . -as pAS --force
 # hg2git.sh -r . -as pAS -url "https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/" --force
-# $ hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force
+# hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force
 # hg2git/hg2git.sh -r . -D7 -as cAS -u softioc -url https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/  --force
 
 FST_EXPRT="/tmp/fast-export"  # fast-export clone directory
-REPO=""
+REPO=""   # Repository name
 #PFX="hg2git"
 #SFX_STATE="state"
-GFI_OPTS=""
-C_OPT=""
-AS_OPTS=""   # AutoSave options
+GFI_OPTS=""   # Git flags such as --force, ...
+C_OPT=""      # fast-export release, Deb7 requires v160914, but v180317 works as well.
+AS_OPTS=""    # AutoSave options
 
-# More compact directory/folder
+# Get directory/folder
 DIR_S=$(dirname "$PWD")
 REPO_S=$(basename "$PWD")
 BRANCH=$(hg branch)
@@ -35,19 +35,18 @@ LONG_USAGE="Import hg repository <repo> up to either tip or <max>
 If <repo> is omitted, use last hg repository as obtained from state file,
 GIT_DIR/$PFX-$SFX_STATE by default.
 
-
 Note: The argument order matters.
 Options:
-	--quiet   Quiet option passed to git push 
-	-r <repo> Mercurial repository to import (InPlace='.')
-	--force   Force push to git repository if it exists.
-	-D7       Debian 7 version to import
-	-as       Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
-	-u        IOC Owner account (e.g. softioc)
-	-url      URL of the git repo to push to
-	-A <file> Read author map from file
-	          (Same as in git-svnimport(1) and git-cvsimport(1))
-	-M <name> Set the default branch name (defaults to 'master')
+	--quiet     Quiet option passed to git push 
+	-r <repo>   Mercurial repository to import (InPlace='.')
+	--force     Force push to git repository if it exists.
+	-D7         Debian 7 version to import
+	-as <AS>    Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
+	-u <user>   IOC Owner account (e.g. softioc)
+	-url <url>  URL of the git repo to push to
+	-A <file>   Read author map from file
+	            (Same as in git-svnimport(1) and git-cvsimport(1))
+	-M <name>   Set the default branch name (defaults to 'master')
 "
 case "$1" in
     -h|--help)
@@ -117,8 +116,6 @@ git clone $C_OPTS https://github.com/frej/fast-export.git $FST_EXPRT
 echo "Cloning mercurial repository"
 # git checkout tags/v180317 # {Debian7: v160914, support for git >= 2.10}
 
-# cd /tmp/hg-repo # Repo to be converted InPlace
-
 # Authors cleanup might be needed, then hg-fast-export with -A flag
 # echo "Getting authors informations"
 # hg log | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
@@ -137,7 +134,6 @@ fi
 
 # Test if it is a mercurial repo "hg root"
 #hg --cwd the/path/you/want/to/test root
-
 if [ ! -d .hg ]; then
     echo "Not hg repository, no conversion";
     exit;
@@ -190,15 +186,8 @@ else # Hg->git migration InPlace (inside hg repository))
 	    sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
     fi
     
-    #/tmp/fast-export/hg-fast-export.sh -r . --force
-    #/tmp/fast-export/hg-fast-export.sh -r . -A /tmp/authors --force
-    # git clean         # did not work 
-    # git checkout HEAD # does not work for InPlace conversion
-    #git reset --hard HEAD   # the files shows as deleted in 'git status'
-    #git add .gitignore
-    
     case $AS_OPTS in   # autosave
-	pAS|pmacAS|pmacAutoSave)          # pmac autosave
+	  pAS|pmacAS|pmacAutoSave)          # pmac as/req, as/save
 	    if [ "$IOC_OWNER" = "" ]
 	    then	    
         git add -f as/req/info_positions.req as/req/info_settings.req
@@ -209,14 +198,14 @@ else # Hg->git migration InPlace (inside hg repository))
 	    fi		    
 	    echo "pmac as files"
         ;;
-	cAS|cameraAS|cameraAutoSave)
+	  cAS|cameraAS|cameraAutoSave)  # areaDetector autosave
       if [ "$IOC_OWNER" = "" ]
 	    then 
         git add -f autosave/auto_settings.sav
       else
         sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
       fi	   
-      echo "camera autosave files"
+        echo "camera autosave files"
       ;;
     esac
 
@@ -237,7 +226,4 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "git push -u origin --tags $GFI_OPTS"  # all branches
    fi
     
-#    git commit -m ".gitignore tracked"
-#    git remote add origin $GIT_REPO  # https://github.com/kgofron/ez4axis
-#    git push -u origin master $GFI_OPTS
 fi  # .hg exists, .git does not exist; Conversion hg-> git is automatic
