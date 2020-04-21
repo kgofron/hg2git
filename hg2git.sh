@@ -26,7 +26,7 @@ echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
 GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
 GIT_REPO="$GIT_URL$REPO_S.git"
-echo "Git repo=$GIT_REPO"
+echo "Git repo defaults to=$GIT_REPO"
 echo "Hg repo branch=$BRANCH"
 
 USAGE="[--quiet] [-r <repo>] [--force] [-D7] [-as <pAS>] [-u <user>] [-A <file>] [-M <name>]"
@@ -92,8 +92,8 @@ do
     -url|--URL|--gitURL)
       shift
       GIT_URL="$1"
-      echo "Git URL->$GIT_URL" 
-      GIT_REPO="$GIT_URL$REPO_S"
+      GIT_REPO="$GIT_URL$REPO_S.git"
+      echo "Git repo->$GIT_REPO"
       ;;
     -*)
       # pass any other options down to hg2git.py
@@ -226,6 +226,7 @@ else # Hg->git migration InPlace (inside hg repository))
         # git push -u origin master $GFI_OPTS # push only master branch
         # git push --set-upstream origin $BRANCH $GFI_OPTS # push feature branch
         git push -u origin --all $GFI_OPTS  # push all branches
+#        git push -u origin --tags
     else
         sudo -Eu $IOC_OWNER bash -c "git commit -m '.gitignore tracked'"
         sudo -Eu $IOC_OWNER bash -c "git remote add origin $GIT_REPO"
