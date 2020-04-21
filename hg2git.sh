@@ -21,11 +21,13 @@ AS_OPTS=""   # AutoSave options
 # More compact directory/folder
 DIR_S=$(dirname "$PWD")
 REPO_S=$(basename "$PWD")
+BRANCH=$(hg branch)
 echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
 GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
 GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo=$GIT_REPO"
+echo "Hg repo branch=$BRANCH"
 
 USAGE="[--quiet] [-r <repo>] [--force] [-D7] [-as <pAS>] [-u <user>] [-A <file>] [-M <name>]"
 LONG_USAGE="Import hg repository <repo> up to either tip or <max>
@@ -60,7 +62,7 @@ do
     -r|--r|--re|--rep|--repo)
       shift
       REPO="$1"
-      echo $REPO
+      echo "Repository=$REPO"
       ;;
     --q|--qu|--qui|--quie|--quiet)
       GFI_OPTS="$GFI_OPTS --quiet"
@@ -85,7 +87,7 @@ do
     -as|--autoS|--autoSave) # PMAC AutoSave as/req, as/save
       shift
       AS_OPTS="$1"
-      echo "Autosave=AS_OPTS"
+      echo "Autosave=$AS_OPTS"
       ;;
     -url|--URL|--gitURL)
       shift
@@ -172,11 +174,17 @@ else # Hg->git migration InPlace (inside hg repository))
     then
       git init
 	    /tmp/fast-export/hg-fast-export.sh -r . --force
+      if [ ! "$BRANCH" = "default" ]; then  # not on the default branch
+        git checkout --force $BRANCH
+      fi
 	    git reset --hard HEAD   # the files shows as deleted in 'git status'
 	    git add .gitignore	
     else
 	    sudo -Eu $IOC_OWNER bash -c "git init"
 	    sudo -Eu $IOC_OWNER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
+      if [ ! "$BRANCH" = "default" ]; then  # not on the default branch
+        sudo -Eu $IOC_OWNER bash -c "git checkout --force $BRANCH"
+      fi      
 	    sudo -Eu $IOC_OWNER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
 	    sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
     fi
@@ -215,11 +223,13 @@ else # Hg->git migration InPlace (inside hg repository))
     then
         git commit -m ".gitignore tracked"
         git remote add origin $GIT_REPO
-        git push -u origin master $GFI_OPTS
+        # git push -u origin master $GFI_OPTS # push only master branch
+        git push -u origin $GFI_OPTS  # push all branches
     else
         sudo -Eu $IOC_OWNER bash -c "git commit -m '.gitignore tracked'"
         sudo -Eu $IOC_OWNER bash -c "git remote add origin $GIT_REPO"
-        sudo -Eu $IOC_OWNER bash -c "git push -u origin master $GFI_OPTS"
+#        sudo -Eu $IOC_OWNER bash -c "git push -u origin master $GFI_OPTS"  # push only master branch
+        sudo -Eu $IOC_OWNER bash -c "git push -u origin $GFI_OPTS"  # all branches
     fi
     
 #    git commit -m ".gitignore tracked"
