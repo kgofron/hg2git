@@ -37,7 +37,7 @@ do
     -b|--branch)
       shift
       BRANCH="$1"
-      echo "Branch=$BRANCH"
+      echo "Branch to merge/close=$BRANCH"
       ;;
     -u|--usr|--user)
       # Owner of the ioc directory
@@ -48,32 +48,23 @@ do
     -cb|--cBranch)
       shift
       CL_BRANCH="$1"
-      echo "CloseBranch=$CL_BRANCH"
+      echo "Branch to close=$CL_BRANCH"
       ;;      
   esac
   shift
 done
 
-BRANCHES=`hg branches | awk '{ print $1 }'`
-echo "Branches->$BRANCHES"
-# if [[ $BRANCHES == *$BRANCH* ]] && [[ ! "$BRANCH" = "" ]]; then
-#   echo "$BRANCH is there"
-# fi
-# if [[ $BRANCHES == *$CL_BRANCH* ]]; then
-#   echo "$CL_BRANCH is there"
-# fi
-# if [[ $BRANCHES == *$CL_BRANCH* ]]; then
-#   echo "$CL_BRANCH is there"
-#   else
-#   echo "$CL_BRANCH1 is NOT there"
-# fi
-# exit
+if [ "$IOC_OWNER" = "" ]; then 
+    BRANCHES=`hg branches | awk '{ print $1 }'` # list of all branches
+else
+    sudo -Eu $IOC_OWNER bash -c "BRANCHES=`hg branches | awk '{ print $1 }'`"
+fi
 
-if [[ $BRANCHES == *$BRANCH* ]]; then
-    echo "Closing hg $BRANCH, and merging with default"
+if [[ $BRANCHES == *$BRANCH* ]]; then     # $BRANCH name exists
+    echo "Closing hg $BRANCH branch, and merging with default branch"
     if [ "$IOC_OWNER" = "" ]; then
         hg up $BRANCH
-        hg ci -m "Merrged/Closed branch $BRANCH" --close-branch
+        hg ci -m "Merged/Closed branch $BRANCH" --close-branch
         hg up default
         hg merge $BRANCH
         hg ci -m merge
@@ -84,20 +75,20 @@ if [[ $BRANCHES == *$BRANCH* ]]; then
         sudo -Eu $IOC_OWNER bash -c "hg merge $BRANCH"
         sudo -Eu $IOC_OWNER bash -c "hg ci -m merge"
     fi
-    echo "Merged hg $BRANCH branch, into default"
+    echo "Merged hg $BRANCH branch, into default branch"
 else
     echo "$BRANCH branch not present, and can not be merged/closed"
 fi
 
-if [[ $BRANCHES ==  *$CL_BRANCH* ]]; then
-    echo "Closing hg $CL_BRANCH"
+if [[ $BRANCHES ==  *$CL_BRANCH* ]]; then   # $CL_BRANCH name exists
+    echo "Closing hg $CL_BRANCH branch"
     if [ "$IOC_OWNER" = "" ]; then    
         hg up -C $CL_BRANCH
         hg commit --close-branch -m "close branch $CL_BRANCH"
         hg up -C default
     else
         sudo -Eu $IOC_OWNER bash -c "hg up -C $CL_BRANCH"
-        sudo -Eu $IOC_OWNER bash -c "hg commit -- close-branch -m \"close branch $CL_BRANCH\""
+        sudo -Eu $IOC_OWNER bash -c "hg commit --close-branch -m \"close branch $CL_BRANCH\""
         sudo -Eu $IOC_OWNER bash -c "hg up -C default"       
     fi
     echo "$CL_BRANCH branch closed"
