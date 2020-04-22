@@ -47,7 +47,7 @@ Options:
 	-as <AS>    Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
 	-u <user>   IOC Owner account (e.g. softioc)
 	-url <url>  URL of the git repo to push to
-	-A <file>   Read author map from file
+	-A <file>   Read author map from file (generated: /tmp/authors)
 	            (Same as in git-svnimport(1) and git-cvsimport(1))
 	-M <name>   Set the default branch name (defaults to 'master')
 "
@@ -124,12 +124,12 @@ echo "Cloning mercurial repository"
 # git checkout tags/v180317 # {Debian7: v160914, support for git >= 2.10}
 
 # Authors cleanup might be needed, then hg-fast-export with -A flag
-# echo "Getting authors informations"
-# hg log | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
-# while read -r line 
-# do
-#     echo "\"$line\"=\"$line\"" >> /tmp/authors
-# done < /tmp/tmp_authors
+echo "Getting authors informations"
+hg log | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
+while read -r line 
+do
+    echo "\"$line\"=\"$line\"" >> /tmp/authors
+done < /tmp/tmp_authors
 
 # Test if it is a git directory
 if [ -d .git ]; then

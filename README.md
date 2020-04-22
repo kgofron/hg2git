@@ -2,7 +2,7 @@
 
 Author: Kazimierz Gofron  
 Created: February 12, 2020  
-Last Updated: April 2, 2020   
+Last Updated: April 22, 2020   
 Copyright (c): 2020 Brookhaven National Laboratory  
 
 ### InPlace migration of mercurial EPICS ioc repository to git
@@ -11,6 +11,7 @@ Release version of this converter of EPICS iocs to git are available on github. 
 
 This mercurial to git converter was tested only for inPlace (within hg repo) conversion of EPICS iocs, and supports following options.
 * -r . {local inPlace hg repository to be migrated into git/gitlab}
+* -b  Only push active $BRANCH branch
 * -D7  {Debian 7 repository; no option when using Debian 10}
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
 * -as cAS {areaDetector iocs autosave files}
@@ -52,6 +53,9 @@ $ hg2git.sh -r . -D7 -as pAS -url https://github.com/kgofron/ --force`
 This hg2git converter installs the fast-export converter in the /tmp/ directory on linux system.
 
 ### Some Known Issues
-* The current version was tested for pmac motor iocs autosave (-as pAS)
-* Conversion of areaDetector iocs autosave is under development (-as aAS)
+* The current version was tested for 
+  * pmac motor iocs autosave (-as pAS)
+  * areaDetector iocs autosave (-as aAS)
+* Pushing of tags has been implemented but not tested
 * Other types of iocs autosave might be added in the future, per request.
+* Authors file is generated in /tmp/authors, but not tested
