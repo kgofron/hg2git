@@ -10,6 +10,7 @@
 # hg2git.sh -r . -as pAS -url "https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/" --force
 # hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force
 # hg2git/hg2git.sh -r . -D7 -as cAS -u softioc -url https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/  --force
+# hg2git/hg2git.sh -r . -b -D7 -as cAS -u softioc -url https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/  --force
 
 FST_EXPRT="/tmp/fast-export"  # fast-export clone directory
 REPO=""   # Repository name
@@ -18,6 +19,7 @@ REPO=""   # Repository name
 GFI_OPTS=""   # Git flags such as --force, ...
 C_OPT=""      # fast-export release, Deb7 requires v160914, but v180317 works as well.
 AS_OPTS=""    # AutoSave options
+B_OPTS="--all"     # Branch push options {active| --all}
 
 # Get directory/folder
 DIR_S=$(dirname "$PWD")
@@ -30,7 +32,7 @@ GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo defaults to=$GIT_REPO"
 echo "Hg repo branch=$BRANCH"
 
-USAGE="[--quiet] [-r <repo>] [--force] [-D7] [-as <pAS>] [-u <user>] [-A <file>] [-M <name>]"
+USAGE="[--quiet] [-r <repo>] [-b <branch>] [--force] [-D7] [-as <pAS>] [-u <user>] [-A <file>] [-M <name>]"
 LONG_USAGE="Import hg repository <repo> up to either tip or <max>
 If <repo> is omitted, use last hg repository as obtained from state file,
 GIT_DIR/$PFX-$SFX_STATE by default.
@@ -39,6 +41,7 @@ Note: The argument order matters.
 Options:
 	--quiet     Quiet option passed to git push 
 	-r <repo>   Mercurial repository to import (InPlace='.')
+  -b          Push only active branch
 	--force     Force push to git repository if it exists.
 	-D7         Debian 7 version to import
 	-as <AS>    Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
@@ -63,6 +66,10 @@ do
       shift
       REPO="$1"
       echo "Repository=$REPO"
+      ;;
+    -b|--branch)   # a=activeBranch, all=allBranches
+      B_OPTS="$BRANCH"
+      echo "Only push active $BRANCH branch"
       ;;
     --q|--qu|--qui|--quie|--quiet)
       GFI_OPTS="$GFI_OPTS --quiet"
@@ -215,14 +222,18 @@ else # Hg->git migration InPlace (inside hg repository))
         git remote add origin $GIT_REPO
         # git push -u origin master $GFI_OPTS # push only master branch
         # git push --set-upstream origin $BRANCH $GFI_OPTS # push feature branch
-        git push -u origin --all $GFI_OPTS  # push all branches
+        # git push -u origin --all $GFI_OPTS  # push all branches
+        # git push -u origin --tags $GFI_OPTS
+        git push -u origin $B_OPTS $GFI_OPTS  # push all branches
         git push -u origin --tags $GFI_OPTS
     else
         sudo -Eu $IOC_OWNER bash -c "git commit -m '.gitignore tracked'"
         sudo -Eu $IOC_OWNER bash -c "git remote add origin $GIT_REPO"
 #        sudo -Eu $IOC_OWNER bash -c "git push -u origin master $GFI_OPTS"  # push only master branch
 #        sudo -Eu $IOC_OWNER bash -c "git push --set-upstream origin $BRANCH $GFI_OPTS"  # push feature branch
-        sudo -Eu $IOC_OWNER bash -c "git push -u origin --all $GFI_OPTS"  # all branches
+        # sudo -Eu $IOC_OWNER bash -c "git push -u origin --all $GFI_OPTS"  # all branches
+        # sudo -Eu $IOC_OWNER bash -c "git push -u origin --tags $GFI_OPTS"  # all branches
+        sudo -Eu $IOC_OWNER bash -c "git push -u origin $B_OPTS $GFI_OPTS"  # all branches
         sudo -Eu $IOC_OWNER bash -c "git push -u origin --tags $GFI_OPTS"  # all branches
    fi
     
