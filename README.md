@@ -16,7 +16,7 @@ This mercurial to git converter was tested only for inPlace (within hg repo) con
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
 * -as cAS {areaDetector iocs autosave files}
 * -u <owner> {convert repo owned by another user: softioc}
-* -url https://github.com/kgofron/mc3 {git destination repository}
+* -url https://github.com/kgofron/ {git destination repository}
 * --force {force option for pushing to the destination git repository}
 
 * Debian 7 turboPmac ioc conversion example with autosave files owned by softioc user
@@ -27,6 +27,11 @@ kgofron@xf10idd-ioc1:/epics/iocs/mc3$ hg2git.sh -r . -D7 -as pAS -u softioc -url
 ```
 kaz@debian10:~/ioc1/mc3$ hg2git.sh -r . -url https://github.com/kgofron/  --force
 ```
+* Debian 7 areaDetector migration of only one (active) branch
+```
+hg2git/hg2git.sh -r . -b -D7 -as cAS -u softioc -url https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/  --force
+```
+
 
 ### Structure same as hg
 * gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1
@@ -59,3 +64,14 @@ This hg2git converter installs the fast-export converter in the /tmp/ directory 
 * Pushing of tags has been implemented but not tested
 * Other types of iocs autosave might be added in the future, per request.
 * Authors file is generated in /tmp/authors, but not tested
+* Author suggests merging and organizing repository should be performed in mercurial prior to conversion. The hgCloseBranch.sh is included for that purpose.
+
+### Hg repository updates prior to hg2git conversion
+The hgCloseBranch.sh helps to organize the mercurial repository prior to conversion to git. The sript merges active feature branch, and/or close another branch.
+* merges '-b' <branch> into default branch and closes <branch> 
+* closes -cb <c_branch> without merging into default.
+```
+hgCloseBranch.sh -b srx -u softioc -cb chx    # merge srx, and close chx
+```
+
+
