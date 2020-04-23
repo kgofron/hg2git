@@ -102,16 +102,19 @@ do
       GIT_REPO="$GIT_URL$REPO_S.git"
       echo "Git repo->$GIT_REPO"
       ;;
-    -*)
-      # pass any other options down to hg2git.py
-      break
-      ;;
     *)
-      break
+      echo "#### Invalid option entered =\"$1\""
+      exit
       ;;
   esac
   shift
 done
+
+# exit if IOC_OWNER does not exists on this system
+if [[ ! IOC_OWNER = "" ]] && [[ $(getent passwd $IOC_OWNER) = "" ]]; then
+    echo "#### User $IOC_OWNER does not exist on this system"
+    exit
+fi
 
 echo "Preparing environment"
 rm /tmp/authors
