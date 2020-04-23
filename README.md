@@ -15,8 +15,8 @@ This mercurial to git converter was tested only for inPlace (within hg repo) con
 * -D7  {Debian 7 repository; no option when using Debian 10}
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
 * -as cAS {areaDetector iocs autosave files}
-* -u <owner> {convert repo owned by another user: softioc} 
-* -url <url> (https://github.com/kgofron/) {git destination repository}
+* -u owner {convert repo owned by another user: softioc} 
+* -url url (https://github.com/kgofron/) {git destination repository}
 * --force    {force option for pushing to the destination git repository}
 
 
