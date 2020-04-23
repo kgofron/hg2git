@@ -11,15 +11,16 @@ Release version of this converter of EPICS iocs to git are available on github. 
 
 This mercurial to git converter was tested only for inPlace (within hg repo) conversion of EPICS iocs, and supports following options.
 * -r . {local inPlace hg repository to be migrated into git/gitlab}
-* -b  Only push active $BRANCH branch
+* -b   Only push active $BRANCH branch
 * -D7  {Debian 7 repository; no option when using Debian 10}
 * -as pAS {turboPmac ioc autosave files from as/req and as/save}
 * -as cAS {areaDetector iocs autosave files}
 * -u <owner> {convert repo owned by another user: softioc} 
-* -url https://github.com/kgofron/ {git destination repository}
-* --force {force option for pushing to the destination git repository}
+* -url <url> (https://github.com/kgofron/) {git destination repository}
+* --force    {force option for pushing to the destination git repository}
 
-* Debian 7 turboPmac ioc conversion example with autosave files owned by softioc user
+
+#### Debian 7 turboPmac ioc conversion example with autosave files owned by softioc user
 ```
 kgofron@xf10idd-ioc1:/epics/iocs/mc3$ hg2git.sh -r . -D7 -as pAS -u softioc -url https://github.com/kgofron/ --force`
 ```
