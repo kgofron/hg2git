@@ -67,7 +67,7 @@ This hg2git converter installs the fast-export converter in the /tmp/ directory 
 * Authors file is generated in /tmp/authors, but not tested
 * Author suggests merging and organizing repository should be performed in mercurial prior to conversion. The hgCloseBranch.sh is included for that purpose.
 
-### Hg repository updates prior to hg2git conversion
+## Hg repository updates prior to hg2git conversion
 The hgCloseBranch.sh helps to organize the mercurial repository prior to conversion to git. The script merges active feature branch, and/or close another branch.
 * merges '-b' <branch> into default branch and closes <branch> 
 * closes -cb <c_branch> without merging into default.
