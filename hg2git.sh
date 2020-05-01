@@ -41,7 +41,7 @@ Note: The argument order matters.
 Options:
 	--quiet     Quiet option passed to git push 
 	-r <repo>   Mercurial repository to import (InPlace='.')
-  -b          Push only active branch
+  	-b          Push only active branch
 	--force     Force push to git repository if it exists.
 	-D7         Debian 7 version to import
 	-as <AS>    Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
