@@ -27,7 +27,8 @@ REPO_S=$(basename "$PWD")
 BRANCH=$(hg branch)
 echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
-GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
+#GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
+GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idb-ioc1/"
 GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo defaults to=$GIT_REPO"
 echo "Hg repo branch=$BRANCH"
@@ -157,8 +158,10 @@ else # Hg->git migration InPlace (inside hg repository))
       if [ "$IOC_OWNER" = "" ]
       then
         cp .hgignore .gitignore
-        echo ".hg" >> .gitignore
-        # echo "*~" >> .gitignore
+	echo "syntax: glob" >> .gitignore
+        echo "*~" >> .gitignore
+        echo ".hg/" >> .gitignore
+        echo ".hgignore" >> .gitignore
         # echo "db/" >> .gitignore
         # echo "dbd/" >> .gitignore
         # echo "O.linux-x86_64/" >> .gitignore
