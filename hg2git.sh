@@ -160,8 +160,8 @@ else # Hg->git migration InPlace (inside hg repository))
         cp .hgignore .gitignore
 	echo "syntax: glob" >> .gitignore
         echo "*~" >> .gitignore
-        echo ".hg/" >> .gitignore
         echo ".hgignore" >> .gitignore
+        echo ".hg\/" >> .gitignore
         # echo "db/" >> .gitignore
         # echo "dbd/" >> .gitignore
         # echo "O.linux-x86_64/" >> .gitignore
