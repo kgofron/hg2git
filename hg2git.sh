@@ -161,7 +161,7 @@ else # Hg->git migration InPlace (inside hg repository))
 	echo "syntax: glob" >> .gitignore
         echo "*~" >> .gitignore
         echo ".hgignore" >> .gitignore
-        echo ".hg\/" >> .gitignore
+        echo ".hg/" >> .gitignore
         # echo "db/" >> .gitignore
         # echo "dbd/" >> .gitignore
         # echo "O.linux-x86_64/" >> .gitignore
@@ -176,7 +176,10 @@ else # Hg->git migration InPlace (inside hg repository))
         # echo ".hg/" >> .gitignore
       else
         sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
-        sudo -Eu $IOC_OWNER bash -c "echo ".hg" >> .gitignore"
+	sudo -Eu $IOC_OWNER bash -c "echo 'syntax: glob' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '*~' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '.hgignore' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"
       fi	
     fi    # .gitignore created
 
