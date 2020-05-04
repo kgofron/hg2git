@@ -162,7 +162,7 @@ else # Hg->git migration InPlace (inside hg repository))
         echo "*~" >> .gitignore
         echo ".hgignore" >> .gitignore
         echo ".hg/" >> .gitignore
-        echo "records.dbl" >> .gitignore	
+        echo "records.dbl" >> .gitignore
         # echo "db/" >> .gitignore
         # echo "dbd/" >> .gitignore
         # echo "O.linux-x86_64/" >> .gitignore
@@ -175,6 +175,9 @@ else # Hg->git migration InPlace (inside hg repository))
         # echo "TMP/" >> .gitignore
         # echo ".git/" >> .gitignore
         # echo ".hg/" >> .gitignore
+	echo ".gitignore" >> .hgignore
+	echo ".git/" >> .hgignore
+        echo "records.dbl" >> .hgignore
       else
         sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
 	sudo -Eu $IOC_OWNER bash -c "echo 'syntax: glob' >> .gitignore"
@@ -182,7 +185,10 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "echo '.hgignore' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .gitignore"	
-      fi	
+	sudo -Eu $IOC_OWNER bash -c "echo '.gitignore' >> .hgignore"
+	sudo -Eu $IOC_OWNER bash -c "echo '.git/' >> .hgignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .hgignore      
+      fi  #  IOC_OWNER
     fi    # .gitignore created
 
     if [ "$IOC_OWNER" = "" ]
