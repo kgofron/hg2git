@@ -187,7 +187,7 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .gitignore"	
 	sudo -Eu $IOC_OWNER bash -c "echo '.gitignore' >> .hgignore"
 	sudo -Eu $IOC_OWNER bash -c "echo '.git/' >> .hgignore"
-        sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .hgignore      
+        sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .hgignore"    
       fi  #  IOC_OWNER
     fi    # .gitignore created
 
