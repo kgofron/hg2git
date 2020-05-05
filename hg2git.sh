@@ -129,7 +129,13 @@ echo "Cloning mercurial repository"
 
 # Authors cleanup might be needed, then hg-fast-export with -A flag
 echo "Getting authors informations"
-hg log | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
+if [ "$IOC_OWNER" = "" ]
+then
+    hg log | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
+else
+    sudo -Eu $IOC_OWNER bash -c "hg log" | grep user: | sort | uniq | sed 's/user: *//' > /tmp/tmp_authors
+fi
+
 while read -r line 
 do
     echo "\"$line\"=\"$line\"" >> /tmp/authors
