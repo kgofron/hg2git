@@ -181,9 +181,6 @@ else # Hg->git migration InPlace (inside hg repository))
         # echo "TMP/" >> .gitignore
         # echo ".git/" >> .gitignore
         # echo ".hg/" >> .gitignore
-	echo ".gitignore" >> .hgignore
-	echo ".git/" >> .hgignore
-        echo "records.dbl" >> .hgignore
       else
         sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
 	sudo -Eu $IOC_OWNER bash -c "echo 'syntax: glob' >> .gitignore"
@@ -191,9 +188,6 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "echo '.hgignore' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .gitignore"	
-	sudo -Eu $IOC_OWNER bash -c "echo '.gitignore' >> .hgignore"
-	sudo -Eu $IOC_OWNER bash -c "echo '.git/' >> .hgignore"
-        sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .hgignore"    
       fi  #  IOC_OWNER
     fi    # .gitignore created
 
@@ -205,7 +199,10 @@ else # Hg->git migration InPlace (inside hg repository))
         git checkout --force $BRANCH
       fi
 	    git reset --hard HEAD   # the files shows as deleted in 'git status'
-	    git add .gitignore	
+	    git add -f .gitignore
+            echo '.gitignore' >> .hgignore     #  hg should ignore internal git repo files
+            echo '.git/' >> .hgignore
+            echo 'records.dbl' >> .hgignore
     else
 	    sudo -Eu $IOC_OWNER bash -c "git init"
 	    sudo -Eu $IOC_OWNER bash -c "/tmp/fast-export/hg-fast-export.sh -r . --force"
@@ -213,7 +210,10 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "git checkout --force $BRANCH"
       fi      
 	    sudo -Eu $IOC_OWNER bash -c "git reset --hard HEAD"   # the files shows as deleted in 'git status'
-	    sudo -Eu $IOC_OWNER bash -c "git add .gitignore"	
+	    sudo -Eu $IOC_OWNER bash -c "git add -f .gitignore"	
+            sudo -Eu $IOC_OWNER bash -c "echo '.gitignore' >> .hgignore"  #  hg should ignore internal git repo files
+            sudo -Eu $IOC_OWNER bash -c "echo '.git/' >> .hgignore"
+            sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .hgignore"    
     fi
     
     case $AS_OPTS in   # autosave
