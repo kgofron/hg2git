@@ -25,6 +25,7 @@ B_OPTS="--all"     # Branch push options {active| --all}
 DIR_S=$(dirname "$PWD")
 REPO_S=$(basename "$PWD")
 BRANCH=$(hg branch)
+FE_OPTS=""    # Clone fast-export
 echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
 #GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
@@ -43,6 +44,7 @@ Options:
 	--quiet     Quiet option passed to git push 
 	-r <repo>   Mercurial repository to import (InPlace='.')
   	-b          Push only active branch
+	-c	    Do not clone fast-export repo
 	--force     Force push to git repository if it exists.
 	-D7         Debian 7 version to import
 	-as <AS>    Autosave files for pmac, camera, ... (pmac->pAS, camera->cAS)
@@ -68,9 +70,13 @@ do
       REPO="$1"
       echo "Repository=$REPO"
       ;;
-    -b|--branch)   # a=activeBranch, all=allBranches
+    -b|--branch)   # activeBranch
       B_OPTS="$BRANCH"
       echo "Only push active $BRANCH branch"
+      ;;
+    -c|--notClone)  # do not clone fast-export
+	FE_OPTS="DoNotClone"
+	echo "Not cloning fast-export"
       ;;
     --q|--qu|--qui|--quie|--quiet)
       GFI_OPTS="$GFI_OPTS --quiet"
@@ -83,7 +89,7 @@ do
       ;;
     -D7|--Deb7|--Debian7)
       # Debian 7 requires v160914, or maybe v180610
-#      C_OPTS="-b v160914"
+#      C_OPTS="-b v160914"   # {Debian7: v160914, support for git >= 2.10}
       C_OPTS="-b v180317"
 #      C_OPTS="-b v200213"
       ;;
@@ -119,13 +125,14 @@ fi
 
 echo "Preparing environment"
 rm /tmp/authors
-rm -rf /tmp/fast-export
 
-git clone $C_OPTS https://github.com/frej/fast-export.git $FST_EXPRT
-#cd /tmp/fast-export 
-#git checkout tags/v160914  # Debian 7
-echo "Cloning mercurial repository"
-# git checkout tags/v180317 # {Debian7: v160914, support for git >= 2.10}
+if [[ $FE_OPTS = "" ]]; then   # Clone fast-export if no -c flag
+    rm -rf /tmp/fast-export   
+    git clone $C_OPTS https://github.com/frej/fast-export.git $FST_EXPRT
+    echo "Cloning fast-export repository"
+else
+    echo "Not cloning fast-export repository"
+fi
 
 # Authors cleanup might be needed, then hg-fast-export with -A flag
 echo "Getting authors informations"
