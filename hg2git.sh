@@ -170,31 +170,41 @@ else # Hg->git migration InPlace (inside hg repository))
     else
       if [ "$IOC_OWNER" = "" ]
       then
-        cp .hgignore .gitignore
-	echo "syntax: glob" >> .gitignore
+     #   cp .hgignore .gitignore
+	echo "syntax: glob" > .gitignore
         echo "*~" >> .gitignore
+        echo "*.o" >> .gitignore
+        echo "*.d" >> .gitignore
+        echo "*.log" >> .gitignore	
+        echo "*.dbl" >> .gitignore
+        echo "db/" >> .gitignore
+        echo "dbd/" >> .gitignore
+        echo "O.*" >> .gitignore
+        echo "envPaths" >> .gitignore
+        echo "bin/" >> .gitignore
+        echo "lib/" >> .gitignore	
+        echo "as/" >> .gitignore
+        echo "/pmc/" >> .gitignore
         echo ".hgignore" >> .gitignore
         echo ".hg/" >> .gitignore
-        echo "records.dbl" >> .gitignore
-        # echo "db/" >> .gitignore
-        # echo "dbd/" >> .gitignore
-        # echo "O.linux-x86_64/" >> .gitignore
-        # echo "O.Common/" >> .gitignore
-        # echo "envPaths" >> .gitignore
-        # echo "bin/" >> .gitignore
-        # echo "records.dbl" >> .gitignore
-        # echo "as/" >> .gitignore
-        # echo "save_old/" >> .gitignore
-        # echo "TMP/" >> .gitignore
-        # echo ".git/" >> .gitignore
-        # echo ".hg/" >> .gitignore
       else
-        sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
-	sudo -Eu $IOC_OWNER bash -c "echo 'syntax: glob' >> .gitignore"
+     #   sudo -Eu $IOC_OWNER bash -c "cp .hgignore .gitignore"
+	sudo -Eu $IOC_OWNER bash -c "echo 'syntax: glob' > .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '*~' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '*.o' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '*.d' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '*.log' >> .gitignore"	
+        sudo -Eu $IOC_OWNER bash -c "echo '*.dbl' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'db/' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'dbd/' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'O.*' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'envPaths' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'bin/' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'lib/' >> .gitignore"	
+        sudo -Eu $IOC_OWNER bash -c "echo 'as/' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo '/pmc/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '.hgignore' >> .gitignore"
-        sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"
-        sudo -Eu $IOC_OWNER bash -c "echo 'records.dbl' >> .gitignore"	
+        sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"	
       fi  #  IOC_OWNER
     fi    # .gitignore created
 
@@ -227,23 +237,45 @@ else # Hg->git migration InPlace (inside hg repository))
 	  pAS|pmacAS|pmacAutoSave)          # pmac as/req, as/save
 	    if [ "$IOC_OWNER" = "" ]
 	    then	    
-        git add -f as/req/info_positions.req as/req/info_settings.req
-        git add -f as/save/info_positions.sav as/save/info_settings.sav
+		git add -f as/req/info_positions.req as/req/info_settings.req
+		git add -f as/save/info_positions.sav as/save/info_settings.sav
 	    else
-        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
-        sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
 	    fi		    
 	    echo "pmac as files"
-        ;;
+            ;;
 	  cAS|cameraAS|cameraAutoSave)  # areaDetector autosave
-      if [ "$IOC_OWNER" = "" ]
-	    then 
-        git add -f autosave/auto_settings.sav
-      else
-        sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
-      fi	   
-        echo "camera autosave files"
-      ;;
+	      if [ "$IOC_OWNER" = "" ]
+	      then 
+		  git add -f autosave/auto_settings.sav
+	      else
+		  sudo -Eu $IOC_OWNER bash -c "git add -f autosave/auto_settings.sav"	       
+	      fi	   
+              echo "camera autosave files"
+	      ;;
+	  picoAS|picoMotorAS|picoMotorAutoSave)  # pico Motor autosave
+	      if [ "$IOC_OWNER" = "" ]
+	      then 
+		git add -f as/req/motorNewFocus_positions.req as/req/motorNewFocus_settings.req
+		git add -f as/save/motorNewFocus_positions.sav as/save/motorNewFocus_settings.sav
+	      else
+	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/motorNewFocus_positions.req as/req/motorNewFocus_settings.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/motorNewFocus_positions.sav as/save/motorNewFocus_settings.sav"	       
+	      fi	   
+              echo "pico motor  autosave files"
+	      ;;	  
+	  ez4AS|ez4axisAS|ez4axisMotorAutoSave)  # pico Motor autosave
+	      if [ "$IOC_OWNER" = "" ]
+	      then 
+		git add -f as/req/allmotion_pass0.req as/req/allmotion_pass1.req
+		git add -f as/save/allmotion_pass0.sav as/save/allmotion_pass1.sav
+	      else
+	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/allmotion_pass0.req as/req/allmotion_pass1.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/allmotion_pass0.sav as/save/allmotion_pass1.sav"	       
+	      fi	   
+              echo "allMotion autosave files"
+	      ;;	  
     esac
 
     if [ "$IOC_OWNER" = "" ]
