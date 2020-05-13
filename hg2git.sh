@@ -28,8 +28,8 @@ BRANCH=$(hg branch)
 FE_OPTS=""    # Clone fast-export
 echo "Current directory and repo=$DIR_S, $REPO_S"
 #GIT_URL="https://github.com/kgofron/"
-#GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
-GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idb-ioc1/"
+GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idd-ioc1/"
+#GIT_URL="https://gitlab.nsls2.bnl.gov/xf/10id/iocs/xf10idb-ioc1/"
 GIT_REPO="$GIT_URL$REPO_S.git"
 echo "Git repo defaults to=$GIT_REPO"
 echo "Hg repo branch=$BRANCH"
@@ -184,6 +184,7 @@ else # Hg->git migration InPlace (inside hg repository))
         echo "bin/" >> .gitignore
         echo "lib/" >> .gitignore	
         echo "as/" >> .gitignore
+        echo "autosave/" >> .gitignore
         echo "/pmc/" >> .gitignore
         echo ".hgignore" >> .gitignore
         echo ".hg/" >> .gitignore
@@ -202,6 +203,7 @@ else # Hg->git migration InPlace (inside hg repository))
         sudo -Eu $IOC_OWNER bash -c "echo 'bin/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo 'lib/' >> .gitignore"	
         sudo -Eu $IOC_OWNER bash -c "echo 'as/' >> .gitignore"
+        sudo -Eu $IOC_OWNER bash -c "echo 'autosave/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '/pmc/' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '.hgignore' >> .gitignore"
         sudo -Eu $IOC_OWNER bash -c "echo '.hg/' >> .gitignore"	
