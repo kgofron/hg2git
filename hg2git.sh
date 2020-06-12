@@ -239,11 +239,15 @@ else # Hg->git migration InPlace (inside hg repository))
 	  pAS|pmacAS|pmacAutoSave)          # pmac as/req, as/save
 	    if [ "$IOC_OWNER" = "" ]
 	    then	    
-		git add -f as/req/info_positions.req as/req/info_settings.req
-		git add -f as/save/info_positions.sav as/save/info_settings.sav
+		git add -f as/req/info_positions.req 
+		git add -f as/req/info_settings.req
+		git add -f as/save/info_positions.sav 
+		git add -f as/save/info_settings.sav
 	    else
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req as/req/info_settings.req"
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav as/save/info_settings.sav"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_positions.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/req/info_settings.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_positions.sav"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/info_settings.sav"
 	    fi		    
 	    echo "pmac as files"
             ;;
@@ -259,22 +263,30 @@ else # Hg->git migration InPlace (inside hg repository))
 	  picoAS|picoMotorAS|picoMotorAutoSave)  # pico Motor autosave
 	      if [ "$IOC_OWNER" = "" ]
 	      then 
-		git add -f as/req/motorNewFocus_positions.req as/req/motorNewFocus_settings.req
-		git add -f as/save/motorNewFocus_positions.sav as/save/motorNewFocus_settings.sav
+		git add -f as/req/motorNewFocus_positions.req
+		git add -f as/req/motorNewFocus_settings.req
+		git add -f as/save/motorNewFocus_positions.sav
+		git add -f as/save/motorNewFocus_settings.sav
 	      else
-	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/motorNewFocus_positions.req as/req/motorNewFocus_settings.req"
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/motorNewFocus_positions.sav as/save/motorNewFocus_settings.sav"	       
+                sudo -Eu $IOC_OWNER bash -c "git add -f as/req/motorNewFocus_positions.req"
+ 	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/motorNewFocus_settings.req"
+                sudo -Eu $IOC_OWNER bash -c "git add -f as/save/motorNewFocus_positions.sav"        
+ 		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/motorNewFocus_settings.sav"	       
 	      fi	   
               echo "pico motor  autosave files"
 	      ;;	  
 	  ez4AS|ez4axisAS|ez4axisMotorAutoSave)  # pico Motor autosave
 	      if [ "$IOC_OWNER" = "" ]
 	      then 
-		git add -f as/req/allmotion_pass0.req as/req/allmotion_pass1.req
-		git add -f as/save/allmotion_pass0.sav as/save/allmotion_pass1.sav
+		git add -f as/req/allmotion_pass0.req
+		git add -f as/req/allmotion_pass1.req
+		git add -f as/save/allmotion_pass0.sav 
+		git add -f as/save/allmotion_pass1.sav
 	      else
-	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/allmotion_pass0.req as/req/allmotion_pass1.req"
-		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/allmotion_pass0.sav as/save/allmotion_pass1.sav"	       
+	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/allmotion_pass0.req"
+	        sudo -Eu $IOC_OWNER bash -c "git add -f as/req/allmotion_pass1.req"
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/allmotion_pass0.sav"	       
+		sudo -Eu $IOC_OWNER bash -c "git add -f as/save/allmotion_pass1.sav"	       
 	      fi	   
               echo "allMotion autosave files"
 	      ;;	  
