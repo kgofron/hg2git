@@ -44,7 +44,9 @@ echo "Repo renamed=$REPO_RENAMED"
 if [[ $REPO_RENAMED = $REPO_LOCAL ]]; then  # local repo named smi
     echo "Git repo name is smi=$REPO_RENAMED"
     git remote add origin $GIT_REPO   # add remote repo  NSLS2 origin
+
+    git push -u origin --all  # Push to the NSLS2 repo
+    # git push -u origin --tags
 else
     echo "git repo smi does not exist, or multiple repos"
 fi
-
